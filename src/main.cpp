@@ -2,18 +2,34 @@
 #include "Arduino.h"
 #include "BigNumber.h"
 
-void setup ()
+void calcE(int ini)
 {
-  Serial.begin (115200);
-  while (!Serial) ;
-  delay(500);
-  Serial.println ();
+    Serial.println ("--- calcE " +(String) ini+ " ---");
+    BigNumber::begin (ini);
+    // some big numbers
+    BigNumber n = 1, e = 1, one = 1;
+
+    int i = 1;
+    BigNumber E;  // previous result
+
+    unsigned long start = millis ();
+    do
+    {
+      E = e;
+      n *= i++;  // n is i factorial
+      e += one / n;
+    }  while (e != E);
+    unsigned long time = millis () - start;
+    Serial.println (e);
+    Serial.print (time);
+    Serial.println (" mS");
+
+    BigNumber::finish();
+}
+
+void power()
+{
   BigNumber::begin ();  // initialize library
-
-}  // end of setup
-
-void loop ()
-{
   Serial.println ("--- powers of 2 ---");
 
   BigNumber a = 2;
@@ -39,4 +55,22 @@ void loop ()
     BigNumber p = a.pow (i);
     Serial.println (p);
   }  // end of for loop
+}
+
+void setup ()
+{
+  Serial.begin (115200);
+  while (!Serial) ;
+  delay(500);
+  Serial.println ();
+  delay(5000);
+
+  calcE(283);
+
+
+}  // end of setup
+
+void loop ()
+{
+
 }
